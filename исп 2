@@ -1,1 +1,64 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+namespace ConsoleApplication2
+{
+    class Program
+    {
+        enum Monthes
+        {
+            Январь = 1,
+            Февраль = 2,
+            Март = 3,
+            Апрель = 4,
+            Май = 5,
+            Июнь = 6,
+            Июль = 7,
+            Август = 8,
+            Сентябрь = 9,
+            Октябрь = 10,
+            Ноябрь = 11,
+            Декабрь = 12
+        }
+        static void Main(string[] args)
+        {
+            string str = Console.ReadLine();//перевернуть строку
+            string[] a = str.Split(' ');
+            for (int i = a.Length - 1; i >= 0; i--)
+                Console.Write(  a[i]+' ');
+
+
+
+            string str1 = Console.ReadLine();
+            Regex strin = new Regex( "[А-Я]");
+            MatchCollection matches = strin.Matches(str1);
+            if (matches.Count > 0)
+            {
+                foreach (Match match in matches)
+                    Console.WriteLine(match.Value);
+            }
+            else
+            {
+                Console.WriteLine("Совпадений не найдено");
+            }
+
+            
+
+            DateTime dt = new DateTime();
+
+            for (Monthes m = Monthes.Январь; m <= Monthes.Декабрь; m++)
+            {
+                dt = dt.AddMonths(1);
+                Console.WriteLine(dt.ToString("MMMM", System.Globalization.CultureInfo.CreateSpecificCulture("FR").DateTimeFormat));
+            }
+
+            Console.ReadKey();
+
+        }
+    }
+}
 
