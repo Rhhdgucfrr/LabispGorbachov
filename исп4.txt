@@ -1,0 +1,94 @@
+using System;
+using System.Management;
+using System.Collections.Generic;
+
+namespace shlapa
+{
+    class Program
+    {
+        private static List<string> GetHardwareInfo(string WIN32_Class, string ClassItemField)
+        {
+            List<string> objectResult = new List<string>();
+
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM " + WIN32_Class);
+
+            try
+            {
+                foreach (ManagementObject obj in searcher.Get())
+                {
+                    objectResult.Add(obj[ClassItemField].ToString().Trim());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return objectResult;
+        }
+        private static void PrintOutputobjectResult(string info, List<string> objectResult)
+        {
+            if (info.Length > 0)
+                Console.WriteLine(info);
+
+            if (objectResult.Count > 0)
+            {
+                for (int i = 0; i < objectResult.Count; ++i)
+                    Console.WriteLine(objectResult[i]);
+            }
+        }
+        private static void print()
+        {
+            PrintOutputobjectResult("Процессор:", GetHardwareInfo("Win32_Processor", "Name"));
+            PrintOutputobjectResult("Производитель:", GetHardwareInfo("Win32_Processor", "Manufacturer"));
+            PrintOutputobjectResult("Описание:", GetHardwareInfo("Win32_Processor", "Description"));
+            PrintOutputobjectResult("Видеокарта:", GetHardwareInfo("Win32_VideoController", "Name"));
+            PrintOutputobjectResult("Видеопроцессор:", GetHardwareInfo("Win32_VideoController", "VideoProcessor"));
+            PrintOutputobjectResult("Версия драйвера:", GetHardwareInfo("Win32_VideoController", "DriverVersion"));
+            PrintOutputobjectResult("Объем памяти (в байтах):", GetHardwareInfo("Win32_VideoController", "AdapterRAM"));
+            PrintOutputobjectResult("Название дисковода:", GetHardwareInfo("Win32_CDROMDrive", "Name"));
+            PrintOutputobjectResult("Буква привода:", GetHardwareInfo("Win32_CDROMDrive", "Drive"));
+            PrintOutputobjectResult("Жесткий диск:", GetHardwareInfo("Win32_DiskDrive", "Caption"));
+            PrintOutputobjectResult("Объем (в байтах):", GetHardwareInfo("Win32_DiskDrive", "Size"));
+        }
+
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Версия Windows: {0}",
+               Environment.OSVersion);
+            Console.WriteLine("64 Bit операционная система? : {0}",
+               Environment.Is64BitOperatingSystem ? "Да" : "Нет");
+            Console.WriteLine("Имя компьютера : {0}",
+               Environment.MachineName);
+            Console.WriteLine("Число процессоров : {0}",
+               Environment.ProcessorCount);
+            Console.WriteLine("Системная папка : {0}",
+               Environment.SystemDirectory);
+            Console.WriteLine("Логические диски : {0}",
+                  String.Join(", ", Environment.GetLogicalDrives())
+               .TrimEnd(',', ' ')
+               .Replace("\\", String.Empty));
+            Console.WriteLine("ОЗУ " + +Environment.SystemPageSize + " Системная папка " + Environment.SystemDirectory);
+            print();
+
+            /*  Console.WriteLine("ОЗУ "+ + Environment.SystemPageSize +" Системная папка "+ Environment.SystemDirectory);
+
+              ManagementClass myManagementClass = new ManagementClass("Win32_Processor");
+              ManagementObjectCollection myManagementCollection = myManagementClass.GetInstances();
+              PropertyDataCollection myProperties = myManagementClass.Properties;
+              IReadOnlyDictionary myPropertyobjectResults = new Dictionary();
+
+              foreach (var obj in myManagementCollection)
+              {
+                  foreach (var myProperty in myProperties)
+                  {
+                      myPropertyobjectResults.Add(myProperty.Name,
+                         obj.Properties[myProperty.Name].Value);
+                  }
+              }*/
+            Console.ReadKey();
+        }
+
+    }
+}
