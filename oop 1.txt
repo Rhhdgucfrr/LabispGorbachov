@@ -1,5 +1,3 @@
-
-
 #include <iostream>
 
 
@@ -60,17 +58,39 @@ int main(void) {
 	setlocale(LC_ALL, "Russian");
 	Tree* tree = NULL;
 	int n = 0;
-	int value = 0;
+    std::cin.exceptions(std::ios::failbit);
 	bool tt = false;
 	
 	int chousen = 0;
-	while (tt==false) {
-		print_menu();
-		std::cout << ("Выберите действие") << std::endl;		
-			std::cin >> chousen;
 	
+	while(tt==false){
+		print_menu();
+		bool tr=false;
+		while(tr==false){
+		try
+		    {
+		        std::cin.clear();
+	      	    std::cout << ("Выберите действие") << std::endl;		
+		     	std::cin >> chousen;
+		     	tr=true;
+	     	}
+	   	catch (std::ios::failure e){std::cout<<"оштбка выбора действия";}
+		}
+	    int value=0;
+     
 		switch (chousen) 
 		{
+		  /*  std::cin.exceptions(std::ios::failbit);
+  try  {
+      cout<<"Введите размер матрицы n:";
+      std::cin >>(int) n;
+        } 
+    catch (std::ios::failure e) 
+     {
+        std::cerr << "Input failed" << std::endl;
+        return 1;
+     }*/
+    
 		case 1: {
 			bool insert = true;
 			while (insert != false)
@@ -78,7 +98,7 @@ int main(void) {
 				try {
 					std::string g = "";
 					std::cout << ("Введите элемент") << std::endl;
-					std::cin >> value;
+					std::cin >>value;
 					tree = InsertNode(tree, value);
 					std::cout << ("Продолжить? Y/N") << std::endl;
 					std::cin >> g;
@@ -88,7 +108,7 @@ int main(void) {
 					else { insert = false; }
 					std::cin.clear();
 				}
-				catch (std::exception a) { std::cout<<(""); }
+				catch (std::ios::failure e) { std::cout<<("sdhdfjhgfjgf");insert=false;}
 			}
 
 			break;
@@ -136,6 +156,7 @@ int main(void) {
 		break;
 		}
 	}
+	
 	ClearNode(tree);
 	return 0;
 }
@@ -165,7 +186,7 @@ Tree* InsertNode(Tree* node, int val) {
 			node->right = InsertNode(node->right, val);
 		return node;
 	}
-	catch (std::exception) { std::cout << ("Ошибка добавления элемента дерева");return node;
+	catch (std::ios::failure e) { std::cout << ("Ошибка добавления элемента дерева");return node;
 	}
 	
 }
