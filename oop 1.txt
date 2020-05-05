@@ -60,42 +60,29 @@ int main(void) {
 	int n = 0;
     std::cin.exceptions(std::ios::failbit);
 	bool tt = false;
-	
 	int chousen = 0;
-	
 	while(tt==false){
 		print_menu();
-		bool tr=false;
-		while(tr==false){
-		try
-		    {
+		
+		
 		        std::cin.clear();
 	      	    std::cout << ("Выберите действие") << std::endl;		
 		     	std::cin >> chousen;
-		     	tr=true;
-	     	}
-	   	catch (std::ios::failure e){std::cout<<"оштбка выбора действия";}
-		}
+		     
+	     	
+	   
 	    int value=0;
      
 		switch (chousen) 
 		{
-		  /*  std::cin.exceptions(std::ios::failbit);
-  try  {
-      cout<<"Введите размер матрицы n:";
-      std::cin >>(int) n;
-        } 
-    catch (std::ios::failure e) 
-     {
-        std::cerr << "Input failed" << std::endl;
-        return 1;
-     }*/
+		
     
 		case 1: {
 			bool insert = true;
 			while (insert != false)
 			{
 				try {
+				    std::cin.clear();
 					std::string g = "";
 					std::cout << ("Введите элемент") << std::endl;
 					std::cin >>value;
@@ -107,11 +94,12 @@ int main(void) {
 					}
 					else { insert = false; }
 					std::cin.clear();
+					break;
 				}
-				catch (std::ios::failure e) { std::cout<<("sdhdfjhgfjgf");insert=false;}
+				catch (std::ios::failure e) { std::cout<<("Ошибка моя изза меня она тут");std::cin.clear();std::cin>>value;}
 			}
 
-			break;
+			
 		}		
 		case 2:		
 			try {
@@ -231,3 +219,4 @@ void ClearNode(Tree* node) {
 		delete node;
 	}
 }
+void clear( std::ios_base::iostate state = std::ios_base::goodbit );
