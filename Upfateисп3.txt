@@ -1,0 +1,129 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication3
+
+{
+    public class Account
+    {
+
+
+
+        static int IdDefault = 0;
+
+        Account[] a;
+
+        public Account(int col)
+        {
+            a = new Account[col];
+        }
+        public Account(decimal sum, int percentage)
+        {
+            Id += IdDefault;
+            Sum = sum;
+            Percentage = percentage;
+        }
+        public decimal Sum { get; private set; }
+        public int Percentage { get; private set; }
+
+        public Account this[int index]
+        {
+            get
+            {
+                return a[index];
+            }
+            set
+            {
+                a[index] = value;
+            }
+        }
+        public int Id { get; private set; }
+
+        public virtual void PutMonney(decimal sum)
+        {
+            Sum += sum;
+            Console.WriteLine("Into Account " + sum + " Summ" + Sum);
+        }
+        public virtual decimal GetMonney(decimal sum)
+        {
+            decimal Result = 0;
+            if (Sum >= sum)
+            {
+                Sum -= sum;
+                Result = Sum;
+                Console.WriteLine("Geting monney with" + " " + Id + " Summ " + Sum);
+            }
+            else
+            {
+                Console.WriteLine("Insufficient funds" + " " + "id= " + Id + " " + Sum);
+            }
+            return Result;
+        }
+
+        protected internal virtual void Open()
+        {
+            Console.WriteLine($"Open new Account! Id : {Id}", Sum);
+
+        }
+        protected internal virtual void Calculate()
+        {
+            decimal increment = Sum * Percentage / 100;
+            Sum = Sum + increment;
+            Console.WriteLine($"Pur Percentage: {increment}", increment);
+        }
+    }
+
+    class Program
+    {
+
+        static void Main(string[] args)
+
+        {
+            int n = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Write summ and percentage to open account");
+            Account acc = new Account(n);
+            for (int i = 0; i < n; i++)
+            {
+                acc[i] = new Account(Convert.ToDecimal(Console.ReadLine()), Convert.ToInt32(Console.ReadLine()));
+                acc[i].Open();
+                acc[i].Calculate();
+                Console.WriteLine("1-Getting monney");
+                Console.WriteLine("2-Put monney into account");
+                Console.WriteLine("3-Viev percentage");
+                Console.WriteLine("4-exit");
+                bool exit = false;
+                while (exit == false)
+                {
+                    Console.WriteLine("Chouse your action");
+                    int chosen = Convert.ToInt32(Console.ReadLine());
+                    if (chosen == 1)
+                    {
+                        Console.WriteLine("Write summ ");
+                        acc[i].GetMonney(Convert.ToDecimal(Console.ReadLine()));
+                    }
+                    if (chosen == 2)
+                    {
+                        Console.WriteLine("Write summ ");
+                        acc[i].PutMonney(Convert.ToDecimal(Console.ReadLine()));
+                    }
+                    if (chosen == 3)
+                    {
+                        Console.WriteLine("Your percentage");
+                        acc[i].Calculate();
+                    }
+                    if (chosen == 4)
+                    {
+                        break;
+                    }
+                }
+                Console.ReadKey();
+
+            }
+        }
+
+    }
+}
+
