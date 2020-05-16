@@ -21,6 +21,7 @@ namespace ConsoleApplication3
         Deposit,
         Kredit
     }
+    
     abstract public class Account
     {
 
@@ -43,6 +44,7 @@ namespace ConsoleApplication3
             Sum += sum;
             Console.WriteLine("Putinng into account " + sum + "value " + Sum);
         }
+        
         public virtual decimal GetMonney(decimal sum)
         {
             decimal result = 0;
@@ -57,7 +59,9 @@ namespace ConsoleApplication3
                 Console.WriteLine("Enof monney" + " " + "id= " + Id + " " + Sum);
             }
             return result;
+            
         }
+        
         protected internal void Incrementcol_Days_OpenAccount()
         {
             col_days_openAccount++;
@@ -72,6 +76,7 @@ namespace ConsoleApplication3
             Console.WriteLine($"Open new account! Id account : {Id}", Sum);
 
         }
+        
         protected internal virtual void Calculate()
         {
             decimal increment = Sum * Percentage / 100;
@@ -101,11 +106,13 @@ namespace ConsoleApplication3
             else
                 Console.WriteLine("In account put monney after 30 days " + Id);
         }
+        
         public override decimal GetMonney(decimal sum)
         {
             return base.GetMonney(-sum);
             Console.WriteLine("ost dolg in credit account id= " + this.Id + " value " + this.Sum);
         }
+        
         protected internal override void Calculate()
         {
             if (col_days_openAccount > 30)
@@ -392,11 +399,9 @@ namespace ConsoleApplication3
         private static void OpenAccount(Bank<Account> bank)
         {
             Console.WriteLine("write summ and cost:");
-
             decimal sum = Convert.ToDecimal(Console.ReadLine());
             Console.WriteLine("Chose act: 1. deb 2. depos 3.kred");
             TypeDogovera TypeDogovera;
-
             int type = Convert.ToInt32(Console.ReadLine());
 
             if (type == 2)
@@ -407,7 +412,6 @@ namespace ConsoleApplication3
             else
                 TypeDogovera = TypeDogovera.Kredit;
             bank.Open(TypeDogovera, sum);
-
         }
 
 
@@ -428,18 +432,20 @@ namespace ConsoleApplication3
             int id = Convert.ToInt32(Console.ReadLine());
             bank.PutMonney(sum, id);
         }
+        
         private static void SortByComparer(Bank<Account> bank)
         {
             Console.WriteLine("sortinf finished");
             bank.SortByComparer();
-
         }
+        
         private static void Find(Bank<Account> bank)
         {
             Console.WriteLine("chose Id account:");
             bank.FindAccountover(Convert.ToInt32(Console.ReadLine()));
 
         }
+        
         private static void CloseAccount(Bank<Account> bank)
         {
             Console.WriteLine("chose id account:");
