@@ -21,9 +21,9 @@ namespace ConsoleApplication3
         Deposit,
         Kredit
     }
-     abstract public class Account 
+    abstract public class Account
     {
-       
+
         static int idDefault = 0;
         protected int col_days_openAccount = 0;
 
@@ -41,7 +41,7 @@ namespace ConsoleApplication3
         public virtual void PutMonney(decimal sum)
         {
             Sum += sum;
-            Console.WriteLine("На счет поступило " + sum + "итог" + Sum);
+            Console.WriteLine("Putinng into account " + sum + "value " + Sum);
         }
         public virtual decimal GetMonney(decimal sum)
         {
@@ -50,11 +50,11 @@ namespace ConsoleApplication3
             {
                 Sum -= sum;
                 result = Sum;
-                Console.WriteLine("Сумма снята со счета" + " " + Id + " остаток " + Sum);
+                Console.WriteLine("Get into account" + " " + Id + " РѕСЃС‚Р°С‚РѕРє " + Sum);
             }
             else
             {
-                Console.WriteLine("Недостаточно средств" + " " + "id= " + Id + " " + Sum);
+                Console.WriteLine("Enof monney" + " " + "id= " + Id + " " + Sum);
             }
             return result;
         }
@@ -69,16 +69,17 @@ namespace ConsoleApplication3
 
         protected internal virtual void Open()
         {
-            Console.WriteLine($"Открыт новый счет! Id счета : {Id}", Sum);
+            Console.WriteLine($"Open new account! Id account : {Id}", Sum);
 
         }
         protected internal virtual void Calculate()
         {
             decimal increment = Sum * Percentage / 100;
             Sum = Sum + increment;
-            Console.WriteLine($"Начислены проценты в размере: {increment}", increment);
+            Console.WriteLine($"Put  Percentage: {increment}", increment);
         }
     }
+
 
     public class KreditAccount : Account
     {
@@ -87,7 +88,7 @@ namespace ConsoleApplication3
         }
         protected internal override void Open()
         {
-            Console.WriteLine($"Открыт новый кредитный счет! Id счета : {this.Id}" + " Остаток долга =  " + this.Sum);
+            Console.WriteLine($"Open new Credit account! Id account : {this.Id}" + " Ostatok =  " + this.Sum);
 
         }
 
@@ -98,12 +99,12 @@ namespace ConsoleApplication3
                 base.PutMonney(-sum);
             }
             else
-                Console.WriteLine("На счет можно положить только после 30-ти дневного периода " + Id);
+                Console.WriteLine("In account put monney after 30 days " + Id);
         }
         public override decimal GetMonney(decimal sum)
         {
             return base.GetMonney(-sum);
-            Console.WriteLine("Остаток долга на кредитном счете id= " + this.Id + " составил " + this.Sum);
+            Console.WriteLine("ost dolg in credit account id= " + this.Id + " value " + this.Sum);
         }
         protected internal override void Calculate()
         {
@@ -111,6 +112,7 @@ namespace ConsoleApplication3
                 base.Calculate();
         }
     }
+
     public class DemandAccount : Account
     {
         public DemandAccount(decimal sum, int procent) : base(sum, procent)
@@ -119,7 +121,7 @@ namespace ConsoleApplication3
 
         protected internal override void Open()
         {
-            Console.WriteLine($"Открыт новый счет дебетовый! Id счета: {this.Id}", this.Sum);
+            Console.WriteLine($"Open new debet account Id account: {this.Id}", this.Sum);
         }
         protected internal override void Calculate()
         {
@@ -136,7 +138,7 @@ namespace ConsoleApplication3
         }
         protected internal override void Open()
         {
-            Console.WriteLine($"Открыт новый депозитный счет! Id счета: {this.Id}", this.Sum);
+            Console.WriteLine($"open new deposit account! Id account: {this.Id}", this.Sum);
         }
 
         public override void PutMonney(decimal sum)
@@ -146,7 +148,7 @@ namespace ConsoleApplication3
                 base.PutMonney(sum);
             }
             else
-                Console.WriteLine("На счет можно положить только после 30-ти дневного периода " + Id);
+                Console.WriteLine("in account put monney after 30 days " + Id);
         }
 
         public override decimal GetMonney(decimal sum)
@@ -154,7 +156,7 @@ namespace ConsoleApplication3
             if (col_days_openAccount % 30 == 0)
                 return base.GetMonney(sum);
             else
-                Console.WriteLine("Вывести средства можно только после 30-ти дневного периода " + Id + " итог " + this.Sum);
+                Console.WriteLine("Getting monney after 30 days " + Id + " value " + this.Sum);
             return 0;
         }
 
@@ -190,6 +192,7 @@ namespace ConsoleApplication3
                 return 0;
         }
     }
+
     public class Bank<T> where T : Account
     {
         T[] accounts;
@@ -218,7 +221,7 @@ namespace ConsoleApplication3
             }
 
             if (newAccount == null)
-                throw new Exception("Ошибка создания счета");
+                throw new Exception("Error open account");
             if (accounts == null)
                 accounts = new T[] { newAccount };
             else
@@ -237,7 +240,7 @@ namespace ConsoleApplication3
         {
             T account = FindAccount(id);
             if (account == null)
-                throw new Exception("Счет не найден");
+                throw new Exception("Dosent exist this account");
             account.PutMonney(sum);
         }
 
@@ -245,7 +248,7 @@ namespace ConsoleApplication3
         {
             T account = FindAccount(id);
             if (account == null)
-                throw new Exception("Счет не найден");
+                throw new Exception("Dosent exist this account");
             account.GetMonney(sum);
         }
 
@@ -254,7 +257,7 @@ namespace ConsoleApplication3
 
             T account = FindAccount(id);
             if (account == null)
-                throw new Exception("Счет не найден");
+                throw new Exception("Dosent exist this account");
 
             if (accounts.Length <= 1)
                 accounts = null;
@@ -269,6 +272,7 @@ namespace ConsoleApplication3
                 accounts = tempAccounts;
             }
         }
+
         public void CalculatePercentage()
         {
             if (accounts == null)
@@ -295,16 +299,16 @@ namespace ConsoleApplication3
             for (int i = 0; i < accounts.Length; i++)
             {
                 if (accounts[i].Id == id)
-                    Console.WriteLine("Остаток " + accounts[i].Sum + " Номер счета " + accounts[i].Id + " Срок использования счета " + accounts[i].printDate());
+                    Console.WriteLine("Value " + accounts[i].Sum + " Id account " + accounts[i].Id + " isp " + accounts[i].printDate());
             }
 
         }
 
         public void SortByComparer()
         {
-            Console.WriteLine("1-сортировка по остатку");
-            Console.WriteLine("1-сортировка по ID счета");
-            Console.WriteLine("выберите действие");
+            Console.WriteLine("1-sord by value");
+            Console.WriteLine("1-sort by id");
+            Console.WriteLine("chose your act ");
             int command = Convert.ToInt32(Console.ReadLine());
             switch (command)
             {
@@ -312,26 +316,25 @@ namespace ConsoleApplication3
                     Array.Sort(accounts, new AccountComparerBySum());
                     for (int i = 0; i < accounts.Length; i++)
                     {
-                        Console.WriteLine("Остаток " + accounts[i].Sum + " Номер счета " + accounts[i].Id + " Срок использования счета " + accounts[i].printDate());
+                        Console.WriteLine("value " + accounts[i].Sum + " id " + accounts[i].Id + " isp " + accounts[i].printDate());
                     }
                     break;
                 case 2:
                     Array.Sort(accounts, new AccountComparerById());
                     for (int i = 0; i < accounts.Length; i++)
                     {
-                        Console.WriteLine("Остаток " + accounts[i].Sum + " Номер счета " + accounts[i].Id + " Срок использования счета " + accounts[i].printDate());
+                        Console.WriteLine("value " + accounts[i].Sum + " id " + accounts[i].Id + " isp " + accounts[i].printDate());
                     }
-                    break;              
-            }               
+                    break;
+            }
 
         }
 
     }
-   
+
 
     class Program
     {
-
         static void Main(string[] args)
 
         {
@@ -339,15 +342,15 @@ namespace ConsoleApplication3
             bool alive = true;
             while (alive)
             {
-                Console.WriteLine("1.Открыть счет");
-                Console.WriteLine("2.Снять деньги");
-                Console.WriteLine("3.Положить деньги");
-                Console.WriteLine("4.Закрыть счет ");
-                Console.WriteLine("5.День-");
-                Console.WriteLine("6.Информация о счете");
-                Console.WriteLine("7.Сортировка сччетов по сумме");
-                Console.WriteLine("8.Выйти из программы");
-                Console.WriteLine("Введите номер пункта:");
+                Console.WriteLine("1.open");
+                Console.WriteLine("2.Get monney");
+                Console.WriteLine("3.Put monney");
+                Console.WriteLine("4.Close account ");
+                Console.WriteLine("5.Days-");
+                Console.WriteLine("6.Info");
+                Console.WriteLine("7.sort by value");
+                Console.WriteLine("8.Exit");
+                Console.WriteLine("Chose your act:");
                 try
                 {
                     int command = Convert.ToInt32(Console.ReadLine());
@@ -388,10 +391,10 @@ namespace ConsoleApplication3
 
         private static void OpenAccount(Bank<Account> bank)
         {
-            Console.WriteLine("Введите сумму для создания счета:");
+            Console.WriteLine("write summ and cost:");
 
             decimal sum = Convert.ToDecimal(Console.ReadLine());
-            Console.WriteLine("Выберите тип счета: 1. Дебетовый 2. Депозит 3.Кредит");
+            Console.WriteLine("Chose act: 1. deb 2. depos 3.kred");
             TypeDogovera TypeDogovera;
 
             int type = Convert.ToInt32(Console.ReadLine());
@@ -410,36 +413,36 @@ namespace ConsoleApplication3
 
         private static void Getmonney(Bank<Account> bank)
         {
-            Console.WriteLine("Укажите сумму для вывода со счета:");
+            Console.WriteLine("Chose summ :");
             decimal sum = Convert.ToDecimal(Console.ReadLine());
-            Console.WriteLine("Введите id счета:");
+            Console.WriteLine("write id account:");
             int id = Convert.ToInt32(Console.ReadLine());
             bank.GetMonney(sum, id);
         }
 
         private static void PutMonney(Bank<Account> bank)
         {
-            Console.WriteLine("Укажите сумму, чтобы положить на счет:");
+            Console.WriteLine("summ, :");
             decimal sum = Convert.ToDecimal(Console.ReadLine());
-            Console.WriteLine("Введите Id счета:");
+            Console.WriteLine("Chose Id account:");
             int id = Convert.ToInt32(Console.ReadLine());
             bank.PutMonney(sum, id);
         }
         private static void SortByComparer(Bank<Account> bank)
         {
-            Console.WriteLine("Масив счетов отсортирован");
+            Console.WriteLine("sortinf finished");
             bank.SortByComparer();
 
         }
         private static void Find(Bank<Account> bank)
         {
-            Console.WriteLine("Введите Id счета:");
+            Console.WriteLine("chose Id account:");
             bank.FindAccountover(Convert.ToInt32(Console.ReadLine()));
 
         }
         private static void CloseAccount(Bank<Account> bank)
         {
-            Console.WriteLine("Введите id счета, который надо закрыть:");
+            Console.WriteLine("chose id account:");
             int id = Convert.ToInt32(Console.ReadLine());
             bank.Close(id);
         }
