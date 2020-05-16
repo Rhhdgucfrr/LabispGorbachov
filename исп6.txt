@@ -8,11 +8,6 @@ using System.Threading.Tasks;
 namespace ConsoleApplication3
 
 {
-    interface IComparer
-    {
-        int Compare(object o1, object o2);
-    }
-
     public enum TypeDogovera
     {
         Debet,
