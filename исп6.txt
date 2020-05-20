@@ -59,6 +59,7 @@ namespace ConsoleApplication3
         {
             col_days_openAccount++;
         }
+        
         protected internal int printDate()
         {
             return col_days_openAccount;
@@ -115,6 +116,7 @@ namespace ConsoleApplication3
 
     public class DemandAccount : Account
     {
+    
         public DemandAccount(decimal sum, int procent) : base(sum, procent)
         {
         }
@@ -123,6 +125,7 @@ namespace ConsoleApplication3
         {
             Console.WriteLine($"Open new debet account Id account: {this.Id}", this.Sum);
         }
+        
         protected internal override void Calculate()
         {
             if (col_days_openAccount % 30 == 0)
@@ -136,6 +139,7 @@ namespace ConsoleApplication3
         public DepositAccount(decimal sum, int procent) : base(sum, procent)
         {
         }
+        
         protected internal override void Open()
         {
             Console.WriteLine($"open new deposit account! Id account: {this.Id}", this.Sum);
