@@ -1,0 +1,241 @@
+#include "stdafx.h"
+#include <iostream>
+
+
+using namespace std;
+
+struct Tree {
+	float   val;
+	Tree* left;
+	Tree* right;
+};
+
+Tree* InsertNode(Tree* node, float val);
+void Search(Tree* x, float value);
+void  PrintNode(std::ostream& _out, const Tree* node);
+void  ClearNode(Tree* node);
+void print_menu();
+
+Tree* DeleteNode(Tree* node, float val) {
+	if (node == NULL)
+		return node;
+	if (val == node->val) {
+
+		Tree* tmp;
+		if (node->right == NULL)
+			tmp = node->left;
+		else {
+
+			Tree* ptr = node->right;
+			if (ptr->left == NULL) {
+				ptr->left = node->left;
+				tmp = ptr;
+			}
+			else {
+
+				Tree* pmin = ptr->left;
+				while (pmin->left != NULL) {
+					ptr = pmin;
+					pmin = ptr->left;
+				}
+				ptr->left = pmin->right;
+				pmin->left = node->left;
+				pmin->right = node->right;
+				tmp = pmin;
+			}
+		}
+
+		delete node;
+		return tmp;
+	}
+	else if (val < node->val)
+		node->left = DeleteNode(node->left, val);
+	else
+		node->right = DeleteNode(node->right, val);
+	return node;
+}
+
+
+
+int main(void) {
+	setlocale(LC_ALL, "Russian");
+	Tree* tree = NULL;
+	int g;
+	int n = 0;
+	std::cin.exceptions(std::ios::failbit);
+	bool tt = false;
+	int chousen = 0;
+	while (tt == false) {
+		print_menu();
+
+
+		std::cin.clear();
+		std::cout << ("Выберите действие") << std::endl;
+		std::cin >> chousen;
+		float value = 0;
+		switch (chousen)
+		{
+		case 1: {
+			bool insert = true;
+			while (insert != false)
+			{
+				try {
+					std::cin.clear();					
+					std::cout << ("Введите элемент") << std::endl;
+					std::cin >> value;
+					std::cout.setf(ios::fixed);
+					std::cout << value << std::endl;
+					tree = InsertNode(tree, value);
+					std::cout << ("Продолжить? Y/N") << std::endl;
+					std::cin >> g;
+					if (g == 1)
+					{
+					}
+					else { insert = false; }
+					std::cin.clear();
+					break;
+				}
+				catch (std::ios::failure e) { std::cout << ("Ошибка моя изза меня она тут"); std::cin.clear(); std::cin >> value; }
+			}
+
+
+		}
+		case 2:
+			try {
+				std::cout << ("Введите элемент который следует удалить") << std::endl;
+				std::cin >> value;
+				tree = DeleteNode(tree, value);
+				std::cin.clear();
+				break;
+			}
+			catch (int value) { " exeption of type  "; return 0; }
+		case 3:
+		{
+			try
+			{
+				std::cout << ("Введите элемент который следует найти в памяти") << std::endl;
+				int value = 0;
+				std::cin >> value;
+				Search(tree, value);
+				std::cin.clear();
+				break;
+			}
+			catch (std::exception a) { std::cout << ("Ошибка ввода данных"); break; }
+		}
+		case 4:
+		{
+
+		}
+		case 5:
+		{
+			std::cout << ("Дерево имеет вид") << std::endl;
+			PrintNode(std::cout, tree);
+			std::cout << std::endl;
+			break;
+		}
+
+		case 6:
+		{
+			tt = true;
+			break;
+		}
+		std::cin.clear();
+		break;
+		}
+	}
+
+	ClearNode(tree);
+	return 0;
+}
+void print_menu()
+{
+	cout.width(40);
+	cout.setf(ios::right);
+	std::cout << ("1 Добавить") << std::endl;
+	cout.unsetf(ios::right);
+	cout.setf(ios::left);
+	std::cout << ("2 Удалить") << std::endl;
+	cout.width(40);
+	cout.setf(ios::right);
+	std::cout << ("3 Поиск") << std::endl;
+	cout.unsetf(ios::right);
+	cout.setf(ios::left);
+	std::cout << ("4 Сортировка") << std::endl;
+	cout.width(40);
+	cout.setf(ios::right);
+	std::cout << ("5 Просмотр") << std::endl;
+	cout.unsetf(ios::right);
+	cout.setf(ios::left);
+	std::cout << ("6 Выход") << std::endl;
+}
+Tree* InsertNode(Tree* node, float val) {
+	try
+	{
+		if (node == NULL) {
+			node = new (std::nothrow) Tree();
+			if (node != NULL) {
+				node->val = val;
+				node->left = node->right = NULL;
+			}
+			return node;
+		}
+		if (val < node->val)
+			node->left = InsertNode(node->left, val);
+		else
+			node->right = InsertNode(node->right, val);
+		return node;
+	}
+	catch (std::ios::failure e) {
+		std::cout << ("Ошибка добавления элемента дерева"); return node;
+	}
+
+}
+void Search(Tree* x, float value)
+{
+	while (x->val != value)
+	{
+		if (x != NULL)
+		{
+			
+				if (x->left->val == NULL || x->right->val == NULL) {}
+				else {
+					cout.setf(ios::showbase);
+					std::cout << x->left->val << std::endl;
+				}
+		}
+	}
+}
+/*void PrintNode(std::ostream& _out, const Tree* node) {
+	if (node != NULL) {
+		if (node->left != NULL)
+			PrintNode(_out, node->left);
+		_out.setf(ios::showpos);		
+		_out << node->val << ' ';
+
+		if (node->right != NULL)
+			PrintNode(_out, node->right);
+	}
+}*/
+
+void PrintNode(std::ostream& _out, const Tree* node) {
+	if (node != NULL) {
+		if (node->left != NULL)
+			PrintNode(_out, node->left);
+		_out.setf(ios::scientific);
+		_out << node->val << ' ';
+
+		if (node->right != NULL)
+			PrintNode(_out, node->right);
+	}
+}
+
+void ClearNode(Tree* node) {
+	if (node != NULL) {
+		if (node->left != NULL)
+			ClearNode(node->left);
+		if (node->right != NULL)
+			ClearNode(node->right);
+		delete node;
+	}
+}
+void clear(std::ios_base::iostate state = std::ios_base::goodbit);
