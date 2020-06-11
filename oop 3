@@ -1,0 +1,363 @@
+#include "stdafx.h"
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <iomanip>
+
+using namespace std;
+
+template <typename T1, typename T2, typename T3>
+struct Element {
+	T1 firstName;
+	T1 objeckt;
+	T2 counture;
+	T2 year;
+	T3 c;
+	struct Element* next;
+	struct Element* prev;
+};
+
+template <typename T1, typename T2, typename T3>
+class Subscriber {
+public:
+	Element<T1, T2, T3>* Head;
+	Element<T1, T2, T3>* Tail;
+	int Count;
+	Subscriber();
+	int GetCount();
+	void AddHead(T1 firstName, T1 objeckt, T2 counture, T2 year, T3 c);
+	void AddTail(T1 firstName, T1 objeckt, T2 counture, T2 year, T3 c);
+	void Print();
+	void Sort(int Props);
+	void swap(Element<string, int, string>* q, Element<string, int, string>* p);
+	void subscriberSinceYear(int year);
+	friend ostream& operator << (ostream& out, const Subscriber<T1, T2, T3>& p) {
+
+		out << "Количество элементов: " << p.Count << endl;
+
+		return out;
+	}
+	int& operator[](const int index);
+};
+
+template<typename T1, typename T2, typename T3>
+Subscriber<T1, T2, T3>::Subscriber()
+{
+	Head = Tail = nullptr;
+	Count = 0;
+}
+
+template<typename T1, typename T2, typename T3>
+int Subscriber<T1, T2, T3>::GetCount()
+{
+	return Count;
+}
+
+template<typename T1, typename T2, typename T3> 
+void Subscriber<T1, T2, T3>::AddHead(T1 firstName, T1 objeckt, T2 counture, T2 year, T3 c)
+{
+	Element<T1, T2, T3>* temp = new Element<T1, T2, T3>;
+	temp->prev = 0;
+	temp->firstName = firstName;
+	temp->objeckt = objeckt;
+	temp->year = year;
+	temp->counture = counture;
+	temp->c = c;
+	temp->next = Head;
+	if (Head != 0)
+		Head->prev = temp;
+	if (Count == 0)
+		Head = Tail = temp;
+	else
+		Head = temp;
+	Count++;
+}
+
+template<typename T1, typename T2, typename T3>
+void Subscriber<T1, T2, T3>::AddTail(T1 firstName, T1 objeckt, T2 counture, T2 year, T3 c)
+{
+	try {
+		Element<T1, T2, T3>* temp = new Element<T1, T2, T3>;
+		temp->prev = Tail;
+		temp->firstName = firstName;
+		temp->objeckt = objeckt;
+		temp->year = year;
+		temp->counture = counture;
+		temp->c = c;
+		temp->next = 0;
+
+		if (Tail != 0)
+			Tail->next = temp;
+
+		if (Count == 0)
+			Head = Tail = temp;
+		else
+			Tail = temp;
+		Count++;
+	}
+	catch (bad_alloc ex) {
+		cout << "Error. Cannot allocate memory." << endl;
+		cout << ex.what() << endl;
+	}
+}
+
+template<typename T1, typename T2, typename T3>
+void Subscriber<T1, T2, T3>::Print()
+{
+	int i = 1;
+	Element<T1, T2, T3>* temp = this->Head;
+	while (temp != NULL) {
+		cout << i << ". " << setw(10)
+			<< temp->firstName << setw(10)
+			<< temp->objeckt << setw(10)
+			<< temp->counture << setw(10)
+			<< temp->c << setw(10)
+			<< temp->year << endl;
+		temp = temp->next;
+		i++;
+	}
+}
+
+template<typename T1, typename T2, typename T3>
+int& Subscriber<T1, T2, T3>::operator[](const int index)
+{
+	int counter = 0;
+	Element<T1, T2, T3>* current = this->Head;
+	while (current != nullptr) {
+		if (counter == index) {
+			return current->firstName;
+		}
+		current = current->next;
+		counter++;
+	}
+}
+
+template <typename T1, typename T2, typename T3>
+ostream& operator << (ostream& str, const Subscriber<T1, T2, T3>& ov) {
+	Element<T1, T2>* current = ov.Head;
+	while (current != NULL) {
+		str << current->firstName << " "
+			<< current->objeckt << " "
+			<< current->counture << " "
+			<< current->c << " "
+			<< current->year
+			<< endl;
+		current = current->next;
+	}
+	return str;
+}
+
+template <typename T1, typename T2, typename T3>
+class textFile {
+public:
+	void static writeInFile(Subscriber<T1, T2, T3> element)
+	{
+		cout << "Попытка записать данные в файл.";
+		try {
+			string path = "MyFile.txt";
+			ofstream fout(path, ofstream::out || ofstream::app);
+			if (!fout.is_open()) {
+				throw "Ошибка открытия файла!";
+			}
+			cout << "\nФайл успешно открыт!" << endl;
+			Element<string, int, string>* current = element.Head;
+			while (current != NULL) {
+				fout << current->firstName << " "
+					<< current->objeckt << " "
+					<< current->counture << " "
+					<< current->c << " "
+					<< current->year
+					<< endl;
+				current = current->next;
+			}
+			fout.close();
+			cout << "Данные записаны." << endl;
+		}
+		catch (char* str) {
+			cout << str << endl;
+		}
+	}
+
+	void static readFromFile()
+	{
+		cout << "\nПопытка считать данные из файла!" << endl;
+
+		try {
+			ifstream in("MyFile.txt");
+			T1 firstName;
+			T1 objeckt;
+			T2 counture;
+			T2 year;
+			T3 c;
+
+			Subscriber<string, int, string> current;
+			if (!in.is_open()) {
+				throw "Ошибка открытия файла!";
+			}		
+			if (in.is_open()) {
+				while (in >> firstName >> objeckt >> counture >> c >> year) {
+					current.AddTail(firstName, objeckt, year, counture, c);
+				}
+			}
+
+			in.close();
+			cout << "\nРезультат:" << endl;
+			current.Print();
+
+			cout << "\nСортировка по занятому месту:" << endl;
+			current.Sort(0);
+			current.Print();
+
+			cout << "\nСортировка по объекту :" << endl;
+			current.Sort(1);
+			current.Print();
+
+		}
+		catch (char* str) {
+			cout << str << endl;
+		}
+	}
+
+};
+
+template<typename T1, typename T2, typename T3>
+void Subscriber<T1, T2, T3>::Sort(int props)
+{
+	Element<string, int, string>* left = this->Head;
+	Element<string, int, string>* right = this->Head->next;
+
+	while (left->next)
+	{
+		while (right)
+		{
+			switch (props)
+			{
+
+			case 0:
+				if (left->objeckt[0] > right->objeckt[0])
+				{
+					swap(left, right);
+				}
+				break;
+
+			case 1:
+				if (left->c > right->c)
+				{
+					swap(left, right);
+				}
+				break;
+			}
+			right = right->next;
+		}
+		left = left->next;
+		right = left->next;
+	}
+}
+
+template<typename T1, typename T2, typename T3>
+void Subscriber<T1, T2, T3>::swap(Element<string, int, string>* q, Element<string, int, string>* p)
+{
+	T1 qvalue2 = q->objeckt.substr(0, q->objeckt.size());
+	q->objeckt = p->objeckt.substr(0, p->objeckt.size());
+	p->objeckt = qvalue2;
+	T3 qvalue5 = q->c;
+	q->c = p->c;
+	p->c = qvalue5;
+}
+
+template<typename T1, typename T2, typename T3>
+void Subscriber<T1, T2, T3>::subscriberSinceYear(int year)
+{
+	Subscriber<string, int, string> subscriberSinceYear;
+	Element<string, int, string>* elementcurrentItem = this->Head;
+
+	int count = 0;
+
+	for (int i = 0; i < Count; ++i)
+	{
+		if (elementcurrentItem->year >= year) {
+			Element<T1, T2, T3>* temp = new Element<T1, T2, T3>;
+			temp->prev = elementcurrentItem->prev;
+			temp->firstName = elementcurrentItem->firstName;
+			temp->objeckt = elementcurrentItem->objeckt;
+			temp->year = elementcurrentItem->year;
+			temp->c = elementcurrentItem->c;
+			temp->counture = elementcurrentItem->counture;
+			temp->next = 0;
+
+			if (subscriberSinceYear.Tail != 0)
+				subscriberSinceYear.Tail->next = temp;
+
+			if (count == 0)
+				subscriberSinceYear.Head = subscriberSinceYear.Tail = temp;
+			else
+				subscriberSinceYear.Tail = temp;
+			count++;
+		}
+		elementcurrentItem = elementcurrentItem->next;
+	}
+
+	if (count == 0)
+		cout << "Такого года нет" << endl;
+	else {
+		Element<string, int, string>* left = subscriberSinceYear.Head;
+		Element<string, int, string>* right = subscriberSinceYear.Head->next;
+
+		cout << endl;
+		while (left->next)
+		{
+			while (right)
+			{
+				if (left->objeckt[0] > right->objeckt[0])
+				{
+					swap(left, right);
+				}
+				break;
+
+				right = right->next;
+			}
+			left = left->next;
+			right = left->next;
+		}
+
+		subscriberSinceYear.Print();
+	}
+}
+
+int main()
+{
+	setlocale(LC_ALL, "russian");
+	Subscriber<string, int, string> example;
+	string name;
+	string country;
+	int year = 0;
+	int col=0;
+	string obj;
+	cin >> col;
+	for (int i = 0; i < col; i++) 
+	{
+		cin >> name;
+		cin >> country;
+		cin >> year;
+		cin >> obj;
+		example.AddTail(name, country, i, year, obj);
+		cin.clear();
+	}
+	textFile<string, int, string>::writeInFile(example);
+	textFile<string, int, string>::readFromFile();
+
+	cin.clear();
+
+	cout << "\nС какого года найти абонентов: ";
+	cin >> year;
+	example.subscriberSinceYear(year);
+
+	cout << endl;
+	cout << example;
+	cout << endl;
+	system("pause");
+}
